@@ -68,7 +68,7 @@ def sjfOrder():
 		aux = []
 		pass
 	pass
-
+#ROOOOOOOOOOOOOOLA
 #FCFS
 def fcfs():
 	tempo_med_retorno = 0
