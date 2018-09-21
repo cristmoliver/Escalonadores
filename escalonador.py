@@ -1,14 +1,11 @@
 #Variáveis global
-#Os tempos
-tempo_retorno = 0
-tempo_resposta = 0
-tempo_espera = 0
-tempo_med_retorno = 0
-tempo_med_resposta = 0
-tempo_med_espera = 0
 tempo_total = 0
+tempo_espera_rr = []
+tempo_resposta_rr = []
+tempo_retorno_rr = []
 
 #Os processos
+global num_processos
 num_processos = 0
 processos = []
 processos.append([])
@@ -134,6 +131,20 @@ def sjf():
 
 	pass
 
+def rr():
+	tempo_med_retorno = 0
+	tempo_med_resposta = 0
+	tempo_med_espera = 0
+	global tempo_total
+	tempo_total = 0
+	fim = 0
+	while fim < num_processos:
+		tempo_espera_rr[fim] = fim
+		fim+=1
+		pass
+	print(tempo_espera_rr)
+	pass
+
 #Corpo principal
 #Lendo o arquivo de instâncias para pegar os processos
 ref_arquivo = open("instancias.txt","r")
@@ -147,9 +158,13 @@ for linha in ref_arquivo:
     processos_sjf[DURACAO].append(int(valores[DURACAO]))
     processos_sjf_aux[CHEGADA].append(int(valores[CHEGADA])) 
     processos_sjf_aux[DURACAO].append(int(valores[DURACAO]))
+    tempo_retorno_rr.append(0)
+    tempo_resposta_rr.append(0)
+    tempo_espera_rr.append(0)
     num_processos += 1
 ref_arquivo.close()
 #print(processos_sjf)
 
 fcfs()
 sjf()
+rr()
