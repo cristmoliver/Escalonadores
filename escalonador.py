@@ -47,7 +47,7 @@ def sjfOrder():
 		if j == num_processos:
 			break
 			pass
-
+		i+=processos_sjf[DURACAO][j]
 		if processos_sjf_aux[DURACAO][menor] != -1:
 			processos_sjf[DURACAO][j] = processos_sjf_aux[DURACAO][menor]
 			processos_sjf[CHEGADA][j] = processos_sjf_aux[CHEGADA][menor]
@@ -59,8 +59,6 @@ def sjfOrder():
 			processos_sjf_aux[CHEGADA][j] = -1
 			j+=1
 			pass
-		#i+=processos_sjf[DURACAO][j]
-		i+=1
 		cont = 0
 		aux = []
 		pass
@@ -94,7 +92,7 @@ def fcfs():
 	tempo_med_resposta = tempo_med_resposta / num_processos
 	tempo_med_espera = tempo_med_espera / num_processos
 	tempo_med_retorno = tempo_med_retorno / num_processos
-	print('FCFS', tempo_med_retorno, tempo_med_resposta, tempo_med_espera)
+	print('FCFS', round(tempo_med_retorno,1), round(tempo_med_resposta,1), round(tempo_med_espera,1))
 	pass
 
 #SJF
@@ -103,11 +101,15 @@ def sjf():
 	tempo_med_retorno = 0
 	tempo_med_resposta = 0
 	tempo_med_espera = 0
+	tempo_espera = 0
+	tempo_retorno = 0
+	tempo_resposta = 0
 	global tempo_total
 	tempo_total = 0
+
 	for x in range(num_processos):
-		if tempo_total < processos[CHEGADA][x]:
-			while tempo_total < processos[CHEGADA][x]:
+		if tempo_total < processos_sjf[CHEGADA][x]:
+			while tempo_total < processos_sjf[CHEGADA][x]:
 				tempo_total+=1
 				pass
 			pass
@@ -127,8 +129,7 @@ def sjf():
 	tempo_med_resposta = tempo_med_resposta / num_processos
 	tempo_med_espera = tempo_med_espera / num_processos
 	tempo_med_retorno = tempo_med_retorno / num_processos
-	print('SJF', tempo_med_retorno, tempo_med_resposta, tempo_med_espera)
-
+	print('SJF', round(tempo_med_retorno,1), round(tempo_med_resposta,1), round(tempo_med_espera,1))
 	pass
 
 def rr():
@@ -136,13 +137,78 @@ def rr():
 	tempo_med_resposta = 0
 	tempo_med_espera = 0
 	global tempo_total
+	global tempo_resposta_rr
 	tempo_total = 0
 	fim = 0
-	while fim < num_processos:
-		tempo_espera_rr[fim] = fim
-		fim+=1
+	fila = []
+	quantum = 2
+	primeiro = -1
+
+	chegada_inicial = []
+	for x in range(num_processos):
+		chegada_inicial.append(processos[CHEGADA][x])
 		pass
-	print(tempo_espera_rr)
+	#print(len(fila))
+	while fim < num_processos:
+		for x in range(num_processos):
+			if processos[CHEGADA][x] <= tempo_total and processos[CHEGADA][x] != -1 and x != primeiro:
+				if len(fila) == 0:
+					fila.append(x)
+					pass
+				else:
+					num	= 0
+					for y in range(len(fila)):
+						if fila[y] == x:
+							num = 0
+							break
+							pass
+						num = 1
+						pass
+					if num ==  1:
+						fila.append(x)
+						pass
+				pass	
+			pass
+		if primeiro != -1:
+			if processos[CHEGADA][primeiro] <= tempo_total and processos[CHEGADA][primeiro] != -1:
+				fila.append(primeiro)
+				pass
+			pass
+		
+		primeiro = fila[0]
+
+		tempo_espera_rr[primeiro] += tempo_total - processos[CHEGADA][primeiro]
+		if tempo_resposta_rr[primeiro] == -1:
+			tempo_resposta_rr[primeiro] = tempo_total - processos[CHEGADA][primeiro]
+			pass
+		cont = 0
+		while processos[DURACAO][primeiro] != 0:
+			cont+=1
+			tempo_total+=1
+			processos[DURACAO][primeiro] = processos[DURACAO][primeiro] - 1
+			if  cont == 2:
+				break
+				pass
+			pass
+		processos[CHEGADA][primeiro] = tempo_total
+		if processos[DURACAO][primeiro] == 0:
+			tempo_retorno_rr[primeiro] = tempo_total - chegada_inicial[primeiro]
+			fim+=1
+			processos[CHEGADA][primeiro] = -1
+			pass
+		del fila[0]
+		pass
+
+	for x in range(num_processos):
+		tempo_med_resposta += tempo_resposta_rr[x]
+		tempo_med_retorno += tempo_retorno_rr[x]
+		tempo_med_espera += tempo_espera_rr[x]
+		pass	
+	tempo_med_espera = tempo_med_espera / num_processos
+	tempo_med_retorno = tempo_med_retorno / num_processos
+	tempo_med_resposta = tempo_med_resposta / num_processos
+	print('RR', round(tempo_med_retorno,1), round(tempo_med_resposta,1), round(tempo_med_espera,1))
+
 	pass
 
 #Corpo principal
@@ -159,7 +225,7 @@ for linha in ref_arquivo:
     processos_sjf_aux[CHEGADA].append(int(valores[CHEGADA])) 
     processos_sjf_aux[DURACAO].append(int(valores[DURACAO]))
     tempo_retorno_rr.append(0)
-    tempo_resposta_rr.append(0)
+    tempo_resposta_rr.append(-1)
     tempo_espera_rr.append(0)
     num_processos += 1
 ref_arquivo.close()
