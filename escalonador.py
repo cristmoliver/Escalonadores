@@ -20,6 +20,30 @@ processos_sjf_aux.append([])
 CHEGADA = 0
 DURACAO = 1
 
+def insertionSort():
+	for x in range(1,num_processos):
+		valor_chegada =	processos[CHEGADA][x]
+		valor_duracao = processos[DURACAO][x]
+		indice = x
+
+		while indice > 0 and processos[CHEGADA][indice-1] > valor_chegada:
+			processos[CHEGADA][indice] = processos[CHEGADA][indice-1]
+			processos[DURACAO][indice] = processos[DURACAO][indice-1]
+			processos_sjf[CHEGADA][indice] = processos_sjf[CHEGADA][indice-1]
+			processos_sjf[DURACAO][indice] = processos_sjf[DURACAO][indice-1]
+			processos_sjf_aux[CHEGADA][indice] = processos_sjf_aux[CHEGADA][indice-1]
+			processos_sjf_aux[DURACAO][indice] = processos_sjf_aux[DURACAO][indice-1]
+			indice = indice-1
+			pass
+		processos[CHEGADA][indice] = valor_chegada
+		processos[DURACAO][indice] = valor_duracao
+		processos_sjf[CHEGADA][indice] = valor_chegada
+		processos_sjf[DURACAO][indice] = valor_duracao
+		processos_sjf_aux[CHEGADA][indice] = valor_chegada
+		processos_sjf_aux[DURACAO][indice] = valor_duracao
+		pass
+	pass
+
 #ordernar para pegar o menor tempo de duração dos processos para o SJF
 def sjfOrder():
 	global processos_sjf
@@ -230,9 +254,12 @@ for linha in ref_arquivo:
     tempo_retorno_rr.append(0)
     tempo_resposta_rr.append(-1)
     tempo_espera_rr.append(0)
-    num_processos += 1
+    #num_processos += 1
 ref_arquivo.close()
 #print(processos_sjf)
+num_processos = len(processos[0])
+
+insertionSort()
 
 fcfs()
 sjf()
