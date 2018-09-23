@@ -162,7 +162,6 @@ def sjf():
 			cont+=1
 			tempo_total+=1
 			pass
-		print(tempo_resposta)
 		tempo_retorno = tempo_total - processos_sjf[CHEGADA][x]
 		tempo_med_retorno += tempo_retorno
 		pass
