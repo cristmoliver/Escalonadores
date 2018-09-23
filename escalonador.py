@@ -174,7 +174,10 @@ def rr():
 				fila.append(primeiro)
 				pass
 			pass
-		
+		if len(fila) == 0:
+			tempo_total+=1
+			continue
+			pass
 		primeiro = fila[0]
 
 		tempo_espera_rr[primeiro] += tempo_total - processos[CHEGADA][primeiro]
