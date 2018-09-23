@@ -1,3 +1,9 @@
+'''
+ESCALONADOR DE PROCESSOS
+Desenvolvido por Alexandre Santos Marques
+Código desenvolvido na cadeira de Sistema Operacionais I, onde foram implementado 
+três algoritimos de escalonamento de projetos (FCFS, SJF, RR)
+'''
 #Variáveis global
 tempo_total = 0
 tempo_espera_rr = []
@@ -20,6 +26,7 @@ processos_sjf_aux.append([])
 CHEGADA = 0
 DURACAO = 1
 
+#Algoritimo Insertion Sort para ordenar o arquivo de entrada, caso ela esteja desordenada
 def insertionSort():
 	for x in range(1,num_processos):
 		valor_chegada =	processos[CHEGADA][x]
@@ -44,7 +51,7 @@ def insertionSort():
 		pass
 	pass
 
-#ordernar para pegar o menor tempo de duração dos processos para o SJF
+#Ordernar para pegar o menor tempo de duração dos processos para o SJF
 def sjfOrder():
 	global processos_sjf
 	i = 0
@@ -155,7 +162,7 @@ def sjf():
 			cont+=1
 			tempo_total+=1
 			pass
-		#print(cont)
+		print(tempo_resposta)
 		tempo_retorno = tempo_total - processos_sjf[CHEGADA][x]
 		tempo_med_retorno += tempo_retorno
 		pass
