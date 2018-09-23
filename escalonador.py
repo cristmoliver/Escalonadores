@@ -50,17 +50,22 @@ def sjfOrder():
 	i = 0
 	j = 0
 	aux = []
-	menor = 0
+	menor = -1
 	cont = 0 #Cont é o número de processos que estão na fila de prontos em um determinado tempo
 	while i <= tempo_total:
+		menor = -1
 		for x in range(j, num_processos):
 			if i >= processos_sjf_aux[CHEGADA][x] and processos_sjf_aux[CHEGADA][x] != -1:
 				cont+=1
 				aux.append(x)
 				pass
 			pass
+
+		if len(aux) != 0:
+			menor = aux[0]
+			pass
 		for h in range(1, cont):
-			if (processos_sjf_aux[DURACAO][aux[h-1]] > processos_sjf_aux[DURACAO][aux[h]]):
+			if (processos_sjf_aux[DURACAO][menor] > processos_sjf_aux[DURACAO][aux[h]]):
 				menor = aux[h]
 				maior = aux[h-1]
 				pass
@@ -71,7 +76,12 @@ def sjfOrder():
 		if j == num_processos:
 			break
 			pass
-		i+=processos_sjf[DURACAO][j]
+		cont = 0
+		aux = []
+		if menor == -1:
+			j+=1
+			continue
+			pass
 		if processos_sjf_aux[DURACAO][menor] != -1:
 			processos_sjf[DURACAO][j] = processos_sjf_aux[DURACAO][menor]
 			processos_sjf[CHEGADA][j] = processos_sjf_aux[CHEGADA][menor]
@@ -81,10 +91,9 @@ def sjfOrder():
 
 			processos_sjf_aux[DURACAO][j] = -1
 			processos_sjf_aux[CHEGADA][j] = -1
+			i+=processos_sjf[DURACAO][j]
 			j+=1
 			pass
-		cont = 0
-		aux = []
 		pass
 	pass
 
